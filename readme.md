@@ -8,6 +8,26 @@
 
 本项目是 [ktv-casting](https://github.com/KARAOKE-MASTER-ZJU/ktv-casting) 的安卓前端
 
+## 本 fork 的媒体传输选择
+
+在“连接”页面的 DLNA 卡片中选择“反向代理（默认）”或“传原链接”。选择自动保存，重新连接设备后生效。原链接模式由设备直接访问源站；需要设备支持源站的协议、媒体格式与鉴权。反向代理模式保留手机侧转发、缓存与混流。
+
+Debug CI 从 `native/ktv-casting` 固定的本 fork 提交构建 `.so`，并检查新 JNI 接口，避免误用旧原生库。手动运行 **Build Debug APK** 时勾选“检查全部四种 ABI”，可导出四种架构及 universal 通用 APK。
+
+### Windows 本地打包
+
+需要 JDK 17、Android SDK 36、Build Tools 36.0.0，以及当前固定 Rust 提交对应的 `.so`。CI 的原生库下载后，放入 `app/src/main/jniLibs/<abi>/libktv_casting_lib.so`。
+
+```powershell
+# 在仓库目录运行；可通过 JAVA_HOME / ANDROID_HOME 指定现有工具链。
+# 默认也会查找仓库旁 android-dev/jdk 与 android-dev/sdk。
+./scripts/build-local.ps1
+# 仅构建常见手机架构：
+./scripts/build-local.ps1 -Abis arm64-v8a
+```
+
+脚本运行单元测试、构建 debug 签名 APK、检查原生库是否打包，并导出到 `apks/`。这些安装包使用本地 debug 密钥，不是上游 release 签名。签名密钥与构建缓存保留在仓库旁 `android-dev/` 中。
+
 ## 环境配置
 
 如果你有本地构建发布的需求，复制 `app/local.properties.example` 为 `app/local.properties`，填写你的仓库信息：
