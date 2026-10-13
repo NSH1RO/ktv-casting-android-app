@@ -48,6 +48,10 @@ object RustEngine {
     // 核心初始化：启动 Rust 内部的 HttpServer 和状态机
     external fun startEngine(baseUrl: String, roomId: String, targetLocation: String)
 
+    external fun startEngineWithMediaUrlMode(
+        baseUrl: String, roomId: String, targetLocation: String, direct: Boolean
+    )
+
     // 控制接口：由 KT 决定何时调用
     external fun nextSong()
 

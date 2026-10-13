@@ -69,7 +69,10 @@ jobs:
           ndk-version: r25c
 
       - name: Install cargo-ndk
-        run: cargo install cargo-ndk --locked
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libclang-dev
+          cargo install cargo-ndk --locked
 
       - name: Build Rust libraries from submodule
         working-directory: native/ktv-casting
@@ -82,6 +85,7 @@ jobs:
             build --release --lib --locked
           source="$GITHUB_WORKSPACE/app/src/main/jniLibs/$TARGET_ABI/libktv_casting_lib.so"
           test -s "$source"
+          readelf --dyn-syms --wide "$source" | grep 'Java_zju_bangdream_ktv_casting_RustEngine_startEngineWithMediaUrlMode$'
           mkdir -p "$GITHUB_WORKSPACE/native-libs"
           cp "$source" "$GITHUB_WORKSPACE/native-libs/libktv_casting_lib-$TARGET_ABI.so"
 

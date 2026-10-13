@@ -24,6 +24,7 @@ import zju.bangdream.ktv.casting.RoomApi
 import zju.bangdream.ktv.casting.RoomEntryMode
 import zju.bangdream.ktv.casting.RoomExistenceResult
 import zju.bangdream.ktv.casting.RustEngine
+import zju.bangdream.ktv.casting.ui.components.MediaUrlModeSelector
 import kotlin.concurrent.thread
 
 private enum class RoomOperation {
@@ -72,6 +73,7 @@ fun DeviceSelectorScreen(
     var isDirectConnecting by remember { mutableStateOf(false) }
     var searchError by remember { mutableStateOf<String?>(null) }
     var directIp by remember { mutableStateOf(prefs.getString("direct_ip", "") ?: "") }
+    var directMedia by remember { mutableStateOf(prefs.getBoolean("dlna_direct_media", false)) }
 
     val saveSettings = {
         prefs.edit().apply {
@@ -319,6 +321,12 @@ fun DeviceSelectorScreen(
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        MediaUrlModeSelector(direct = directMedia, onDirectChange = { direct ->
+                            directMedia = direct
+                            prefs.edit().putBoolean("dlna_direct_media", direct).apply()
+                        })
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // 自动搜索按钮

@@ -61,7 +61,9 @@ class CastingService : Service() {
         if (mode == "bilibili") {
             RustEngine.startBilibiliEngine(baseUrl, roomId, buvid)
         } else {
-            RustEngine.startEngine(baseUrl, roomId, location)
+            val directMedia = intent?.getBooleanExtra("direct_media", false) ?: false
+            RustEngine.logFromKotlin("Casting", "DLNA 媒体传输：${if (directMedia) "原链接" else "反向代理"}")
+            RustEngine.startEngineWithMediaUrlMode(baseUrl, roomId, location, directMedia)
         }
 
         // 3. 开启轮询逻辑

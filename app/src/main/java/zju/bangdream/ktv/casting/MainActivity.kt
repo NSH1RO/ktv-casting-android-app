@@ -430,6 +430,8 @@ class MainActivity : ComponentActivity() {
             putExtra("base_url", url)
             putExtra("room_id", room)
             putExtra("location", device.location)
+            putExtra("direct_media", getSharedPreferences("ktv_settings", Context.MODE_PRIVATE)
+                .getBoolean("dlna_direct_media", false))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(intent)
         else startService(intent)
